@@ -23,7 +23,7 @@ pip install steamship
 ```
 python main.py
 ```
-或直接运行 GPT-4.exe，程序启动后，在输入框中输入问题，点击“发送”按钮获取回答。
+或下载并运行 [GPT-4.exe](https://github.com/kingwangim/gpt4-for-windows/raw/main/GPT-4.exe)，程序启动后，在输入框中输入问题，点击“发送”按钮获取回答。
 
 ## 第一次使用
 第一次运行程序后，浏览器会自动跳转打开 https://www.steamship.com/ 网站，需注册对应账号，方可使用。登陆后，后续无需再次登录。
