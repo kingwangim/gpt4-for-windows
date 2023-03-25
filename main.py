@@ -1,5 +1,5 @@
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QTextEdit, QPushButton, QVBoxLayout, QHBoxLayout, QWidget
+from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QTextEdit, QPushButton, QVBoxLayout, QHBoxLayout, QWidget, QSizePolicy
 from PySide6.QtCore import Qt, QEvent
 from steamship import Steamship
 
@@ -9,11 +9,10 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("GPT-4")
-        self.setGeometry(100, 100, 300, 300)
+        self.setMinimumSize(300, 300)
 
         # 创建输入文本框
         self.input_box = QTextEdit(self)
-        self.input_box.setGeometry(20, 20, 260, 80)
         self.input_box.setPlaceholderText("请输入内容")
         self.input_box.setLineWrapMode(QTextEdit.NoWrap)  # 禁止换行
         self.input_box.setFontPointSize(12)
@@ -21,20 +20,24 @@ class MainWindow(QMainWindow):
 
         # 创建发送按钮
         self.send_button = QPushButton("发送", self)
-        self.send_button.setGeometry(100, 110, 80, 30)
         self.send_button.clicked.connect(self.send_input)
 
         # 创建输出文本框
         self.output_box = QTextEdit(self)
-        self.output_box.setGeometry(20, 180, 260, 100)
         self.output_box.setReadOnly(True)
         self.output_box.setFontPointSize(10)
         self.output_box.setStyleSheet("background-color: #F5F5F5;")
 
-        # 禁止窗口拖动
-        self.setFixedSize(300, 300)
-        self.setWindowFlags(self.windowFlags() & ~
-                            Qt.WindowMaximizeButtonHint)  # 禁止最大化按钮
+        # 创建布局
+        layout = QVBoxLayout()
+        layout.addWidget(self.output_box)
+        layout.addWidget(self.input_box)
+        layout.addWidget(self.send_button)
+
+        # 创建主窗口部件并设置布局
+        central_widget = QWidget()
+        central_widget.setLayout(layout)
+        self.setCentralWidget(central_widget)
 
     def eventFilter(self, obj, event):
         if obj == self.input_box and event.type() == QEvent.KeyPress and event.key() == Qt.Key_Return:
