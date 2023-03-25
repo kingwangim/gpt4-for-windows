@@ -1,6 +1,6 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QTextEdit, QPushButton, QVBoxLayout, QHBoxLayout, QWidget
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QEvent
 from steamship import Steamship
 
 
@@ -17,6 +17,7 @@ class MainWindow(QMainWindow):
         self.input_box.setPlaceholderText("请输入内容")
         self.input_box.setLineWrapMode(QTextEdit.NoWrap)  # 禁止换行
         self.input_box.setFontPointSize(12)
+        self.input_box.installEventFilter(self)  # 安装事件过滤器
 
         # 创建发送按钮
         self.send_button = QPushButton("发送", self)
@@ -35,6 +36,12 @@ class MainWindow(QMainWindow):
         self.setWindowFlags(self.windowFlags() & ~
                             Qt.WindowMaximizeButtonHint)  # 禁止最大化按钮
 
+    def eventFilter(self, obj, event):
+        if obj == self.input_box and event.type() == QEvent.KeyPress and event.key() == Qt.Key_Return:
+            self.send_input()
+            return True
+        return super().eventFilter(obj, event)
+
     def send_input(self):
         # 获取输入框的文本
         input_text = self.input_box.toPlainText()
@@ -48,10 +55,8 @@ class MainWindow(QMainWindow):
         # 清空输入框的文本
         self.input_box.clear()
 
-
     def get_GPT(self, input_text):
         # Create a Steamship client
-        # NOTE: When developing a package, just use `self.client`
         client = Steamship(workspace="gpt-4")
 
         # Create an instance of this generator
