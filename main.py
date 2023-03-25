@@ -1,5 +1,5 @@
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QTextEdit, QPushButton, QVBoxLayout, QHBoxLayout, QWidget, QSizePolicy
+from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QTextEdit, QPushButton, QVBoxLayout, QHBoxLayout, QWidget, QSizePolicy, QMessageBox
 from PySide6.QtCore import Qt, QEvent
 from steamship import Steamship
 
@@ -51,9 +51,21 @@ class MainWindow(QMainWindow):
         # 下次输入内容时清除之前的结果
         self.output_box.clear()
 
+        # 显示弹窗
+        sending_box = QMessageBox(self)
+        sending_box.setWindowTitle("请稍候")
+        sending_box.setText("发送中...等待返回结果")
+        sending_box.setStandardButtons(QMessageBox.NoButton)  # 去掉按钮
+        sending_box.show()
+        # 刷新主窗口，使得弹窗能够及时显示
+        QApplication.processEvents()
+
         # GPT 响应内容
         answer = self.get_GPT(str(input_text))
         self.output_box.append("GPT 的回答是: \n" + answer)
+
+        # 隐藏弹窗
+        sending_box.hide()
 
         # 清空输入框的文本
         self.input_box.clear()
